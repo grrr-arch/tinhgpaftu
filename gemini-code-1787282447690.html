@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính Toán & Lập Lộ Trình GPA</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-color: #1f2937;
+            --border-radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        .container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            width: 100%;
+            max-width: 800px;
+            padding: 32px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #111827;
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        input {
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-group {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-calc {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-calc:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-save {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: #059669;
+        }
+
+        /* Result Panel */
+        .result-section {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .result-card {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .result-title {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 4px;
+        }
+
+        .scenario-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .scenario-item {
+            background: white;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            font-size: 0.88rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tag {
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="exportArea">
+    <div class="header">
+        <h1>🎯 Lộ Trình Mục Tiêu GPA</h1>
+        <p>Tính toán số môn cần đạt A/B/C để ra trường như ý</p>
+    </div>
+
+    <div class="form-section">
+        <div class="form-group">
+            <label for="gradCredits">Tổng tín chỉ ra trường</label>
+            <input type="number" id="gradCredits" value="130">
+        </div>
+        <div class="form-group">
+            <label for="completedCredits">Số tín chỉ đã tích lũy</label>
+            <input type="number" id="completedCredits" value="60">
+        </div>
+        <div class="form-group">
+            <label for="remainingCredits">Số tín chỉ còn lại</label>
+            <input type="number" id="remainingCredits" value="70">
+        </div>
+        <div class="form-group">
+            <label for="currentGPA">GPA hiện tại (hệ 4)</label>
+            <input type="number" step="0.01" id="currentGPA" value="2.80">
+        </div>
+        <div class="form-group">
+            <label for="targetGPA">GPA mục tiêu (hệ 4)</label>
+            <input type="number" step="0.01" id="targetGPA" value="3.20">
+        </div>
+        <div class="form-group">
+            <label for="courseCredit">Số tín chỉ / 1 môn (Trung bình)</label>
+            <input type="number" id="courseCredit" value="3">
+        </div>
+    </div>
+
+    <div class="result-section" id="resultBox">
+        <div class="result-card">
+            <div class="result-title">GPA tín chỉ còn lại cần đạt</div>
+            <div class="result-value" id="requiredGPA">-- / 4.0</div>
+        </div>
+
+        <div style="font-weight: 600; font-size: 0.9rem;">Gợi ý phân bổ môn học:</div>
+        <ul class="scenario-list" id="scenarios">
+            <li style="color: #9ca3af; text-align: center; padding: 20px;">Nhấn nút "Tính Toán" để xem gợi ý</li>
+        </ul>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-calc" onclick="calculateGPA()">⚡ Tính Toán Lộ Trình</button>
+        <button class="btn-save" onclick="saveAsImage()">💾 Lưu Thành Ảnh (PNG)</button>
+    </div>
+</div>
+
+<script>
+    function calculateGPA() {
+        const completedCredits = parseFloat(document.getElementById('completedCredits').value) || 0;
+        const remainingCredits = parseFloat(document.getElementById('remainingCredits').value) || 0;
+        const currentGPA = parseFloat(document.getElementById('currentGPA').value) || 0;
+        const targetGPA = parseFloat(document.getElementById('targetGPA').value) || 0;
+        const courseCredit = parseFloat(document.getElementById('courseCredit').value) || 3;
+
+        const reqGpaEl = document.getElementById('requiredGPA');
+        const scenariosEl = document.getElementById('scenarios');
+
+        // Validation
+        if (targetGPA > 4.0 || currentGPA > 4.0 || targetGPA < 0 || currentGPA < 0) {
+            reqGpaEl.innerHTML = '<span class="error-msg">GPA không hợp lệ!</span>';
+            scenariosEl.innerHTML = '';
+            return;
+        }
+
+        const totalCredits = completedCredits + remainingCredits;
+        const totalPointsNeeded = targetGPA * totalCredits;
+        const currentPoints = currentGPA * completedCredits;
+        const remainingPointsNeeded = totalPointsNeeded - currentPoints;
+        const requiredFutureGPA = remainingPointsNeeded / remainingCredits;
+
+        if (requiredFutureGPA > 4.0) {
+            const maxPossible = ((currentPoints + remainingCredits * 4) / totalCredits).toFixed(2);
+            reqGpaEl.innerHTML = `<span class="error-msg">Bất khả thi</span>`;
+            scenariosEl.innerHTML = `<li class="scenario-item error-msg">Dù tất cả môn còn lại đạt 4.0 (A), GPA tối đa bạn chỉ đạt được: ${maxPossible}</li>`;
+            return;
+        }
+
+        reqGpaEl.innerText = `${Math.max(0, requiredFutureGPA).toFixed(2)} / 4.0`;
+
+        // Tính phân bổ môn A, B, C
+        const totalCourses = Math.round(remainingCredits / courseCredit);
+        scenariosEl.innerHTML = '';
+
+        let count = 0;
+        for (let a = totalCourses; a >= 0; a--) {
+            for (let b = totalCourses - a; b >= 0; b--) {
+                let c = totalCourses - a - b;
+                let avg = (a * 4.0 + b * 3.0 + c * 2.0) / totalCourses;
+
+                if (avg >= requiredFutureGPA && count < 5) {
+                    count++;
+                    const li = document.createElement('li');
+                    li.className = 'scenario-item';
+                    li.innerHTML = `
+                        <span><strong>${a}</strong> môn A, <strong>${b}</strong> môn B, <strong>${c}</strong> môn C</span>
+                        <span class="tag">GPA ~${avg.toFixed(2)}</span>
+                    `;
+                    scenariosEl.appendChild(li);
+                }
+            }
+        }
+
+        if (count === 0) {
+            scenariosEl.innerHTML = `<li class="scenario-item">Cần duy trì trung bình mức C trở lên để đạt mục tiêu.</li>`;
+        }
+    }
+
+    // Tính năng lưu kết quả dạng hình ảnh
+    function saveAsImage() {
+        const exportArea = document.getElementById('exportArea');
+        html2canvas(exportArea, {
+            scale: 2,
+            backgroundColor: null
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'lo-trinh-gpa-muc-tieu.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    }
+</script>
+
+</body>
+</html>
