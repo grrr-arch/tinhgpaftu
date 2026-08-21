@@ -1,25 +1,28 @@
+%%html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tính Toán & Lập Lộ Trình GPA</title>
+    <title>Tính Toán GPA Hồng Dễ Thương </title>
+    <!-- Thư viện chụp ảnh giao diện -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --text-color: #1f2937;
-            --border-radius: 16px;
+            --primary: #ff758f;
+            --primary-hover: #ff4d6d;
+            --bg-gradient: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --text-color: #4a3e3d;
+            --accent-pink: #fff0f3;
+            --border-radius: 20px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
@@ -36,9 +39,9 @@
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-radius: var(--border-radius);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 15px 35px rgba(238, 156, 167, 0.3);
             width: 100%;
-            max-width: 800px;
+            max-width: 850px;
             padding: 32px;
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -57,20 +60,20 @@
         }
 
         .header h1 {
-            color: #111827;
+            color: #c9184a;
             font-size: 1.8rem;
             margin-bottom: 6px;
         }
 
         .header p {
-            color: #6b7280;
+            color: #805b61;
             font-size: 0.95rem;
         }
 
         .form-section {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
 
         .form-group {
@@ -82,47 +85,51 @@
         label {
             font-size: 0.85rem;
             font-weight: 600;
-            color: #374151;
+            color: #5c3d42;
         }
 
-        input {
+        input, select {
             padding: 10px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
+            border: 1.5px solid #ffccd5;
+            border-radius: 12px;
             font-size: 0.95rem;
+            background-color: #fff;
+            color: var(--text-color);
             transition: all 0.2s;
         }
 
-        input:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 117, 143, 0.25);
         }
 
         .btn-group {
             grid-column: 1 / -1;
             display: flex;
             gap: 12px;
+            margin-top: 10px;
         }
 
         button {
             flex: 1;
             padding: 12px;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
+            border-radius: 12px;
+            font-weight: 700;
             font-size: 0.95rem;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
+            transition: all 0.2s;
         }
 
         button:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
 
         .btn-calc {
             background-color: var(--primary);
             color: white;
+            box-shadow: 0 4px 12px rgba(255, 117, 143, 0.4);
         }
 
         .btn-calc:hover {
@@ -130,19 +137,19 @@
         }
 
         .btn-save {
-            background-color: #10b981;
-            color: white;
+            background-color: #ffb5a7;
+            color: #5c2c27;
         }
 
         .btn-save:hover {
-            background-color: #059669;
+            background-color: #fcd5ce;
         }
 
-        /* Result Panel */
+        /* Khung hiển thị kết quả */
         .result-section {
-            background-color: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
+            background-color: var(--accent-pink);
+            border: 1px solid #ffccd5;
+            border-radius: 16px;
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -152,22 +159,23 @@
         .result-card {
             background: white;
             padding: 16px;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            text-align: center;
         }
 
         .result-title {
             font-size: 0.85rem;
-            color: #6b7280;
+            color: #a44a5d;
             font-weight: 600;
             text-transform: uppercase;
         }
 
         .result-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #c9184a;
             margin-top: 4px;
         }
 
@@ -176,33 +184,40 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 200px;
+            max-height: 220px;
             overflow-y: auto;
         }
 
         .scenario-item {
             background: white;
-            padding: 10px 12px;
-            border-radius: 6px;
-            border: 1px solid #e5e7eb;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid #ffccd5;
             font-size: 0.88rem;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .tag {
-            background: #e0e7ff;
-            color: #4338ca;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: 600;
+            background: #ffe5ec;
+            color: #c9184a;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 700;
             font-size: 0.8rem;
         }
 
         .error-msg {
-            color: #ef4444;
+            color: #d90429;
             font-size: 0.9rem;
             font-weight: 600;
+        }
+
+        .info-note {
+            font-size: 0.75rem;
+            color: #9a7b80;
+            text-align: center;
         }
     </style>
 </head>
@@ -210,70 +225,108 @@
 
 <div class="container" id="exportArea">
     <div class="header">
-        <h1>🎯 Lộ Trình Mục Tiêu GPA</h1>
-        <p>Tính toán số môn cần đạt A/B/C để ra trường như ý</p>
+        <h1>🌸 Lộ Trình GPA Mục Tiêu 🌸</h1>
+        <p>Tính toán chiến lược đạt GPA mong muốn thật dễ dàng</p>
     </div>
 
+    <!-- Cột nhập liệu -->
     <div class="form-section">
         <div class="form-group">
             <label for="gradCredits">Tổng tín chỉ ra trường</label>
-            <input type="number" id="gradCredits" value="130">
+            <input type="number" id="gradCredits" value="130" oninput="autoSaveData()">
         </div>
         <div class="form-group">
             <label for="completedCredits">Số tín chỉ đã tích lũy</label>
-            <input type="number" id="completedCredits" value="60">
+            <input type="number" id="completedCredits" value="60" oninput="autoSaveData()">
         </div>
         <div class="form-group">
             <label for="remainingCredits">Số tín chỉ còn lại</label>
-            <input type="number" id="remainingCredits" value="70">
+            <input type="number" id="remainingCredits" value="70" oninput="autoSaveData()">
         </div>
         <div class="form-group">
-            <label for="currentGPA">GPA hiện tại (hệ 4)</label>
-            <input type="number" step="0.01" id="currentGPA" value="2.80">
+            <label for="currentGPA">GPA hiện tại (Hệ 4)</label>
+            <input type="number" step="0.01" id="currentGPA" value="2.80" oninput="autoSaveData()">
         </div>
         <div class="form-group">
-            <label for="targetGPA">GPA mục tiêu (hệ 4)</label>
-            <input type="number" step="0.01" id="targetGPA" value="3.20">
+            <label for="targetGPA">GPA mục tiêu (Hệ 4)</label>
+            <input type="number" step="0.01" id="targetGPA" value="3.20" oninput="autoSaveData()">
         </div>
         <div class="form-group">
-            <label for="courseCredit">Số tín chỉ / 1 môn (Trung bình)</label>
-            <input type="number" id="courseCredit" value="3">
+            <label for="courseCredit">Tín chỉ trung bình / môn</label>
+            <input type="number" id="courseCredit" value="3" oninput="autoSaveData()">
+        </div>
+        <div class="form-group">
+            <label for="strategy">Chiến lược ưu tiên</label>
+            <select id="strategy">
+                <option value="balanced">Cân bằng (Đều môn A, B, C)</option>
+                <option value="maxA">Tối đa môn A (Sắp xếp ưu tiên A)</option>
+            </select>
         </div>
     </div>
 
-    <div class="result-section" id="resultBox">
+    <!-- Cột hiển thị kết quả -->
+    <div class="result-section">
         <div class="result-card">
             <div class="result-title">GPA tín chỉ còn lại cần đạt</div>
             <div class="result-value" id="requiredGPA">-- / 4.0</div>
         </div>
 
-        <div style="font-weight: 600; font-size: 0.9rem;">Gợi ý phân bổ môn học:</div>
+        <div style="font-weight: 700; font-size: 0.9rem; color: #805b61;">✨ Gợi ý phân bổ môn học:</div>
         <ul class="scenario-list" id="scenarios">
-            <li style="color: #9ca3af; text-align: center; padding: 20px;">Nhấn nút "Tính Toán" để xem gợi ý</li>
+            <li style="color: #b5838d; text-align: center; padding: 20px;">Bấm "Tính Lộ Trình" để xem kết quả nha 💕</li>
         </ul>
+        <div class="info-note">* Hệ thống tự động ghi nhớ dữ liệu nhập của bạn</div>
     </div>
 
+    <!-- Hàng nút thao tác -->
     <div class="btn-group">
-        <button class="btn-calc" onclick="calculateGPA()">⚡ Tính Toán Lộ Trình</button>
-        <button class="btn-save" onclick="saveAsImage()">💾 Lưu Thành Ảnh (PNG)</button>
+        <button class="btn-calc" onclick="calculateGPA()">💖 Tính Lộ Trình</button>
+        <button class="btn-save" onclick="saveAsImage()">📸 Tải Ảnh Kết Quả</button>
     </div>
 </div>
 
 <script>
+    // Tự động khôi phục dữ liệu đã lưu khi mở lại trang
+    window.onload = function() {
+        const savedData = JSON.parse(localStorage.getItem('gpa_pink_data'));
+        if (savedData) {
+            document.getElementById('gradCredits').value = savedData.gradCredits || 130;
+            document.getElementById('completedCredits').value = savedData.completedCredits || 60;
+            document.getElementById('remainingCredits').value = savedData.remainingCredits || 70;
+            document.getElementById('currentGPA').value = savedData.currentGPA || 2.80;
+            document.getElementById('targetGPA').value = savedData.targetGPA || 3.20;
+            document.getElementById('courseCredit').value = savedData.courseCredit || 3;
+            calculateGPA();
+        }
+    };
+
+    function autoSaveData() {
+        const data = {
+            gradCredits: document.getElementById('gradCredits').value,
+            completedCredits: document.getElementById('completedCredits').value,
+            remainingCredits: document.getElementById('remainingCredits').value,
+            currentGPA: document.getElementById('currentGPA').value,
+            targetGPA: document.getElementById('targetGPA').value,
+            courseCredit: document.getElementById('courseCredit').value
+        };
+        localStorage.setItem('gpa_pink_data', JSON.stringify(data));
+    }
+
     function calculateGPA() {
         const completedCredits = parseFloat(document.getElementById('completedCredits').value) || 0;
         const remainingCredits = parseFloat(document.getElementById('remainingCredits').value) || 0;
         const currentGPA = parseFloat(document.getElementById('currentGPA').value) || 0;
         const targetGPA = parseFloat(document.getElementById('targetGPA').value) || 0;
         const courseCredit = parseFloat(document.getElementById('courseCredit').value) || 3;
+        const strategy = document.getElementById('strategy').value;
 
         const reqGpaEl = document.getElementById('requiredGPA');
         const scenariosEl = document.getElementById('scenarios');
 
-        // Validation
+        // Bắt lỗi dữ liệu
         if (targetGPA > 4.0 || currentGPA > 4.0 || targetGPA < 0 || currentGPA < 0) {
-            reqGpaEl.innerHTML = '<span class="error-msg">GPA không hợp lệ!</span>';
-            scenariosEl.innerHTML = '';
+            reqGpaEl.innerHTML = '<span class="error-msg">Không hợp lệ</span>';
+            scenariosEl.innerHTML = '<li class="scenario-item error-msg">GPA phải từ 0.00 đến 4.00 bạn nhé!</li>';
             return;
         }
 
@@ -285,42 +338,54 @@
 
         if (requiredFutureGPA > 4.0) {
             const maxPossible = ((currentPoints + remainingCredits * 4) / totalCredits).toFixed(2);
-            reqGpaEl.innerHTML = `<span class="error-msg">Bất khả thi</span>`;
-            scenariosEl.innerHTML = `<li class="scenario-item error-msg">Dù tất cả môn còn lại đạt 4.0 (A), GPA tối đa bạn chỉ đạt được: ${maxPossible}</li>`;
+            reqGpaEl.innerHTML = `<span class="error-msg">Bất khả thi 😿</span>`;
+            scenariosEl.innerHTML = `<li class="scenario-item error-msg">Dù tất cả môn còn lại đều đạt 4.0 (A), GPA tối đa bạn đạt được là ${maxPossible}.</li>`;
             return;
         }
 
-        reqGpaEl.innerText = `${Math.max(0, requiredFutureGPA).toFixed(2)} / 4.0`;
+        const displayReqGPA = Math.max(0, requiredFutureGPA).toFixed(2);
+        reqGpaEl.innerText = `${displayReqGPA} / 4.0`;
 
-        // Tính phân bổ môn A, B, C
         const totalCourses = Math.round(remainingCredits / courseCredit);
         scenariosEl.innerHTML = '';
 
-        let count = 0;
+        let list = [];
         for (let a = totalCourses; a >= 0; a--) {
             for (let b = totalCourses - a; b >= 0; b--) {
                 let c = totalCourses - a - b;
                 let avg = (a * 4.0 + b * 3.0 + c * 2.0) / totalCourses;
 
-                if (avg >= requiredFutureGPA && count < 5) {
-                    count++;
-                    const li = document.createElement('li');
-                    li.className = 'scenario-item';
-                    li.innerHTML = `
-                        <span><strong>${a}</strong> môn A, <strong>${b}</strong> môn B, <strong>${c}</strong> môn C</span>
-                        <span class="tag">GPA ~${avg.toFixed(2)}</span>
-                    `;
-                    scenariosEl.appendChild(li);
+                if (avg >= requiredFutureGPA) {
+                    list.push({ a, b, c, avg });
                 }
             }
         }
 
-        if (count === 0) {
-            scenariosEl.innerHTML = `<li class="scenario-item">Cần duy trì trung bình mức C trở lên để đạt mục tiêu.</li>`;
+        // Tùy chọn sắp xếp theo chiến lược
+        if (strategy === 'balanced') {
+            list.sort((x, y) => Math.abs(x.a - x.b) - Math.abs(y.a - y.b));
+        } else {
+            list.sort((x, y) => y.a - x.a);
+        }
+
+        const displayList = list.slice(0, 5);
+
+        if (displayList.length === 0) {
+            scenariosEl.innerHTML = `<li class="scenario-item">Bạn chỉ cần duy trì các môn còn lại đạt từ điểm C trở lên.</li>`;
+        } else {
+            displayList.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'scenario-item';
+                li.innerHTML = `
+                    <span>🌸 <strong>${item.a}</strong> môn A, <strong>${item.b}</strong> môn B, <strong>${item.c}</strong> môn C</span>
+                    <span class="tag">GPA ~${item.avg.toFixed(2)}</span>
+                `;
+                scenariosEl.appendChild(li);
+            });
         }
     }
 
-    // Tính năng lưu kết quả dạng hình ảnh
+    // Xuất hình ảnh PNG
     function saveAsImage() {
         const exportArea = document.getElementById('exportArea');
         html2canvas(exportArea, {
@@ -328,7 +393,7 @@
             backgroundColor: null
         }).then(canvas => {
             const link = document.createElement('a');
-            link.download = 'lo-trinh-gpa-muc-tieu.png';
+            link.download = 'lo-trinh-gpa-pink.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         });
